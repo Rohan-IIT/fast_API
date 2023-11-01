@@ -14,22 +14,15 @@ class City(BaseModel):
     name: str
     timezone: str
 
-# p = requests.get('http://api.weatherstack.com/current?access_key=f536d0223f2c50e88790a3efcbb2600d&query=Chicago')
-# print(p.json())
-
-    
 @app.get('/cities/')
 def get_cities():
     results = []
     print("result => ", results)
     for city in db:
-
         p = f'http://api.weatherstack.com/current?access_key=f536d0223f2c50e88790a3efcbb2600d&query={city["timezone"]}'
         response = requests.get(p)
         weather_API = response.json()
-
         l = weather_API.get("current", {}).get("temperature")
-  
         r = requests.get(f'http://worldtimeapi.org/api/timezone/{city["timezone"]}')
         current_time = r.json()['datetime']
         results.append({'query':city['name'],'timezone':city['timezone'], 'temperature': l ,'current_time':current_time})
